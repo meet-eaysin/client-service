@@ -10,7 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuthControl } from '@/features/auth/provider/auth-provider';
+import { useAuthControl } from '@/features/auth/providers/auth-provider';
 
 export function UserNav() {
   const { logout } = useAuthControl();

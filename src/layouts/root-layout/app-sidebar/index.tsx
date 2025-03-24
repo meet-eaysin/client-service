@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { useAuthControl } from '@/features/auth/provider/auth-provider';
+import { useAuthControl } from '@/features/auth/providers/auth-provider';
 import {
   BadgeCheck,
   Bell,

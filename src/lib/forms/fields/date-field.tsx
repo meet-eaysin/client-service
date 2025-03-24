@@ -28,7 +28,7 @@ export const DateField = <T extends FieldValues>({
   label,
   placeholder = 'Pick a date',
 }: DateFieldProps<T>) => {
-  const control = useFormControl<T>();
+  const { control } = useFormControl<T>();
 
   return (
     <FormField

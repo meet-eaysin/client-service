@@ -1,4 +1,4 @@
-import { useAuthControl } from '@/features/auth/provider/auth-provider';
+import { useAuthControl } from '@/features/auth/providers/auth-provider';
 import { useQueryClient } from '@tanstack/react-query';
 import { AuthTokens, User } from '../types';
 

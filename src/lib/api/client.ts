@@ -1,5 +1,5 @@
 import { AuthApi } from '@/features/auth/api';
-import TokenService from '@/features/auth/service/tokenService';
+import TokenService from '@/features/auth/services/token-service';
 import axios from 'axios';
 
 const apiClient = axios.create({
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         console.error('Refresh token failed:', refreshError);
         TokenService.clearTokens();
-        window.location.href = '/login';
+        window.location.href = '/';
       }
     }
 

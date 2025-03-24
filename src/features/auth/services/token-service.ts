@@ -20,12 +20,13 @@ class TokenService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
   }
 
-  static isAccessTokenExpired(): boolean {
-    const token = this.getAccessToken();
-    if (!token) return true;
-
-    const { exp } = JSON.parse(atob(token.split('.')[1]));
-    return Date.now() >= exp * 1000;
+  static isTokenExpired(token: string): boolean {
+    try {
+      const { exp } = JSON.parse(atob(token.split('.')[1]));
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
   }
 }
 

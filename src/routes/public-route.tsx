@@ -1,14 +1,14 @@
 import PublicGuard from '@/components/guards/public-guard';
-import { LoginPage } from '@/features/auth/page/LoginPage';
+import { LoginPage, RegistrationPage } from '@/features/auth/page';
 import { RouteObject } from 'react-router-dom';
-import { getLoginLink } from './router-link';
+import { getLoginLink, getRegisterLink } from './router-link';
 
 const publicRoute: RouteObject[] = [
   {
     element: <PublicGuard />,
     children: [
       { path: getLoginLink(), element: <LoginPage /> },
-      // { path: getRegisterLink(), element: <RegisterPage /> },
+      { path: getRegisterLink(), element: <RegistrationPage /> },
     ],
   },
 ];

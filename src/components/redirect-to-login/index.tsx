@@ -1,5 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { getLoginLink } from '@/routes/router-link';
+import { Navigate } from 'react-router-dom';
 
-const RedirectToLogin = () => <Navigate to="/" />;
+const RedirectToLogin = () => <Navigate to={getLoginLink()} />;
 
 export default RedirectToLogin;

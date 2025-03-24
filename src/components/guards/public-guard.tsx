@@ -1,4 +1,4 @@
-import { useAuthControl } from '@/features/auth/provider/auth-provider';
+import { useAuthControl } from '@/features/auth/providers/auth-provider';
 import { getDashboardLink } from '@/routes/router-link';
 import { Navigate, Outlet } from 'react-router-dom';
 

@@ -22,7 +22,7 @@ export const ArrayField = <T extends FieldValues>({
   children,
   defaultItem,
 }: ArrayFieldProps<T>) => {
-  const control = useFormControl<T>();
+  const { control } = useFormControl<T>();
   const { fields, append, remove } = useFieldArray({
     control,
     name,

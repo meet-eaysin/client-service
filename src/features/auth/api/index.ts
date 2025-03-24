@@ -1,27 +1,36 @@
 import apiClient from '@/lib/api/client';
-import { AuthResponse, AuthTokens, User } from '../types';
-
-type LoginPayload = {
-  email: string;
-  password: string;
-};
+import type { AuthResponse, AuthTokens, User } from '../types';
 
 export const AuthApi = {
-  login: (payload: LoginPayload) => {
-    return apiClient.post<AuthResponse>('/auth/login', payload);
+  login: async (payload: { email: string; password: string }) => {
+    const response = await apiClient.post<AuthResponse>('/auth/login', payload);
+    return response.data;
+  },
+  register: async (payload: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    const response = await apiClient.post<AuthResponse>(
+      '/auth/register',
+      payload,
+    );
+    return response.data;
   },
   refreshToken: (token: string) => {
-    return apiClient.post<AuthTokens>('/auth/refresh-token', token);
+    return apiClient.post<AuthTokens>('/auth/refresh-tokens', {
+      refreshToken: token,
+    });
   },
-  logout: () => apiClient.post<void>('/auth/logout'),
   getMe: () => apiClient.get<User>('/auth/me'),
-  verifyEmail: (token: string) => {
-    return apiClient.post<AuthResponse>('/auth/verify-email', { token });
-  },
+  logout: () => apiClient.post('/auth/logout'),
   forgotPassword: (email: string) => {
-    return apiClient.post<void>('/auth/forgot-password', { email });
+    return apiClient.post('/auth/forgot-password', { email });
   },
   resetPassword: (payload: { token: string; password: string }) => {
-    return apiClient.post<AuthResponse>('/auth/reset-password', payload);
+    return apiClient.post('/auth/reset-password', payload);
+  },
+  verifyEmail: (token: string) => {
+    return apiClient.post('/auth/verify-email', { token });
   },
 };

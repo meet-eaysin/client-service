@@ -25,7 +25,7 @@ type SelectFieldProps<T extends FieldValues> = {
 export const SelectField = <T extends FieldValues>(
   props: SelectFieldProps<T>,
 ) => {
-  const control = useFormControl<T>();
+  const { control } = useFormControl<T>();
   return (
     <FormField
       control={control}

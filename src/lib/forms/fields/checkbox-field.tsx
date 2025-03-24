@@ -20,7 +20,7 @@ export const CheckboxField = <T extends FieldValues>({
   label,
   description,
 }: CheckboxFieldProps<T>) => {
-  const control = useFormControl<T>();
+  const { control } = useFormControl<T>();
 
   return (
     <FormField
