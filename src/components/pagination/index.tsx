@@ -1,134 +1,99 @@
-import defaultConfig from "@/config/default";
-import {
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from '@/components/ui/select';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 
 interface PaginationProps {
+  currentPage: number;
   totalItems: number;
-  paginationState: {
-    pageIndex: number;
-    pageSize: number;
-  };
-  pageSizeOptions?: number[];
-  handlePageSizeChange: (pageSize: number) => void;
-  handlePageChange: (pageIndex: number) => void;
   pageSize: number;
+  pageSizeOptions?: number[];
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 }
 
-const Pagination = ({
+export const Pagination = ({
+  currentPage,
   totalItems,
-  paginationState,
-  pageSizeOptions = defaultConfig.pageSizeOptions,
-  handlePageSizeChange,
-  handlePageChange,
   pageSize,
+  pageSizeOptions = [10, 20, 50, 100],
+  onPageChange,
+  onPageSizeChange,
 }: PaginationProps) => {
   const pageCount = Math.ceil(totalItems / pageSize);
+  const canPrevious = currentPage > 1;
+  const canNext = currentPage < pageCount;
 
   return (
-    <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
-      <div className="flex w-full items-center justify-between">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {totalItems > 0 ? (
-            <>
-              Showing {paginationState.pageIndex * paginationState.pageSize + 1}{" "}
-              to{" "}
-              {Math.min(
-                (paginationState.pageIndex + 1) * paginationState.pageSize,
-                totalItems
-              )}{" "}
-              of {totalItems} entries
-            </>
-          ) : (
-            "No entries found"
-          )}
+    <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>
+      <div className='flex items-center gap-4'>
+        <div className='flex items-center space-x-2'>
+          <p className='text-sm font-medium'>Rows per page</p>
+          <Select
+            value={`${pageSize}`}
+            onValueChange={(value) => onPageSizeChange(Number(value))}
+          >
+            <SelectTrigger className='h-8 w-[70px]'>
+              <SelectValue placeholder={pageSize} />
+            </SelectTrigger>
+            <SelectContent>
+              {pageSizeOptions.map((size) => (
+                <SelectItem key={size} value={`${size}`}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
-          <div className="flex items-center space-x-2">
-            <p className="whitespace-nowrap text-sm font-medium">
-              Rows per page
-            </p>
-            <Select
-              value={`${paginationState.pageSize}`}
-              onValueChange={(value) => handlePageSizeChange(Number(value))}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={paginationState.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {pageSizeOptions?.map((size) => (
-                  <SelectItem key={size} value={`${size}`}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <p className='text-sm text-muted-foreground'>
+          Page {currentPage} of {pageCount}
+        </p>
       </div>
 
-      <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
-        <div className="flex w-[150px] items-center justify-start text-sm font-medium">
-          {totalItems > 0 ? (
-            <>
-              Page {paginationState.pageIndex + 1} of {pageCount}
-            </>
-          ) : (
-            "No pages"
-          )}
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Button
-            aria-label="Go to first page"
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => handlePageChange(0)}
-            disabled={paginationState.pageIndex === 0}
-          >
-            <DoubleArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <Button
-            aria-label="Go to previous page"
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(paginationState.pageIndex - 1)}
-            disabled={paginationState.pageIndex === 0}
-          >
-            <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <Button
-            aria-label="Go to next page"
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(paginationState.pageIndex + 1)}
-            disabled={paginationState.pageIndex >= pageCount - 1}
-          >
-            <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <Button
-            aria-label="Go to last page"
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => handlePageChange(pageCount - 1)}
-            disabled={paginationState.pageIndex >= pageCount - 1}
-          >
-            <DoubleArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
+      <div className='flex items-center space-x-2'>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => onPageChange(1)}
+          disabled={!canPrevious}
+        >
+          <ChevronsLeft className='h-4 w-4' />
+        </Button>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={!canPrevious}
+        >
+          <ChevronLeft className='h-4 w-4' />
+        </Button>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={!canNext}
+        >
+          <ChevronRight className='h-4 w-4' />
+        </Button>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => onPageChange(pageCount)}
+          disabled={!canNext}
+        >
+          <ChevronsRight className='h-4 w-4' />
+        </Button>
       </div>
     </div>
   );
 };
-
-export default Pagination;

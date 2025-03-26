@@ -11,81 +11,31 @@ import { PasswordField } from '@/lib/forms/fields/password-field';
 import { cn } from '@/lib/utils';
 import { getLoginLink } from '@/routes/router-link';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { useMutation } from '@tanstack/react-query';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { AuthApi } from '../api';
-import { useAuth } from '../hooks/useAuth';
-import { AuthTokens, User } from '../types';
-
-export const passwordSchema = z
-  .string()
-  .min(1, 'Password is required')
-  .refine(
-    (value) =>
-      value.length >= 8 && /[0-9]/.test(value) && /[a-zA-Z]/.test(value),
-    {
-      message:
-        'Must contain at least 8 characters with both letters and numbers',
-    },
-  )
-  .refine((value) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value), {
-    message: 'Add at least 1 special character for better security',
-  });
-
-export const registrationSchema = z
-  .object({
-    email: z.string().email(),
-    password: passwordSchema,
-    name: z.string().min(1, 'Name is required'),
-    confirmPassword: z.string().min(1, 'Confirm Password is required'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
-
-// Type exports
-export type PasswordType = z.infer<typeof passwordSchema>;
-export type RegistrationFormType = z.infer<typeof registrationSchema>;
+import { Link } from 'react-router-dom';
+import { registrationSchema, useRegistration } from '../hooks/useRegistration';
 
 const RegisterForm = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: AuthApi.register,
-    onSuccess: ({ user, tokens }: { user: User; tokens: AuthTokens }) => {
-      login({ user, tokens });
-      navigate('/dashboard');
-      setApiError(null);
-    },
-    onError: (error: unknown) => {
-      const errorMessage =
-        error.response?.data?.message || 'An unexpected error occurred';
-      setApiError(errorMessage);
-      console.error('Registration error:', error);
-    },
-  });
-
-  const handleSubmit = (data: RegistrationFormType) => {
-    setApiError(null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { confirmPassword, ...registrationData } = data;
-    mutate(registrationData);
-  };
+  const {
+    errorMessage,
+    handleSubmit,
+    isPending,
+    setTermsAccepted,
+    termsAccepted,
+    defaultValues,
+  } = useRegistration();
 
   return (
     <div className={cn('mx-auto w-full max-w-2xl px-4', className)} {...props}>
       <div className='bg-card rounded-2xl border p-7 shadow-lg'>
-        <Form schema={registrationSchema} onSubmit={handleSubmit}>
+        <Form
+          schema={registrationSchema}
+          onSubmit={handleSubmit}
+          defaultValues={defaultValues}
+        >
           <div className='flex flex-col gap-8'>
             {/* Header Section */}
             <div className='flex flex-col items-center gap-4'>
@@ -102,11 +52,13 @@ const RegisterForm = ({
               </div>
             </div>
 
-            {apiError && (
+            {errorMessage && (
               <div className='border-l-4 border-destructive bg-destructive/5 pl-4 py-3 rounded-lg flex items-start gap-3'>
                 <AlertCircle className='h-5 w-5 text-destructive mt-0.5' />
                 <div className='flex-1'>
-                  <p className='text-sm text-destructive/90 mt-1'>{apiError}</p>
+                  <p className='text-sm text-destructive/90 mt-1'>
+                    {errorMessage}
+                  </p>
                 </div>
               </div>
             )}
@@ -187,7 +139,6 @@ const RegisterForm = ({
                 </FormItem>
 
                 <Tooltip>
-                  {' '}
                   <TooltipTrigger
                     disabled={!isPending}
                     className='flex items-center cursor-pointer'

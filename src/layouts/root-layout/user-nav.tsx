@@ -13,7 +13,9 @@ import {
 import { useAuthControl } from '@/features/auth/providers/auth-provider';
 
 export function UserNav() {
-  const { logout } = useAuthControl();
+  const { logout, user } = useAuthControl();
+  console.log({ user });
+
   const handleLogout = () => logout();
 
   return (
@@ -22,16 +24,16 @@ export function UserNav() {
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
             <AvatarImage src={'#'} alt={'#'} />
-            <AvatarFallback>E</AvatarFallback>
+            <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>Eaysin</p>
+            <p className='text-sm font-medium leading-none'>{user?.name}</p>
             <p className='text-xs leading-none text-muted-foreground'>
-              eaysin@gmail.com
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>

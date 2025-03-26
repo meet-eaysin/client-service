@@ -1,29 +1,31 @@
-export interface User {
+import { TRole } from '../role/types';
+
+export type TUser = {
   id: string;
+  username: string;
   name: string;
+  password: string;
   email: string;
-  role: string;
-  status: 'Active' | 'Inactive';
-  employee: null | string;
   isEmailVerified: boolean;
-}
+  role: TRole;
+  status: 'Active' | 'Inactive' | 'Suspended' | 'OnLeave' | 'Pending';
+  employee: null;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export interface AccessToken {
-  token: string;
-  expires: string;
-}
+export type TAuthResponse = {
+  tokens: TAuthTokens;
+  user: TUser;
+};
 
-export interface RefreshToken {
-  token: string;
-  expires: string;
-}
-
-export interface AuthTokens {
-  access: AccessToken;
-  refresh: RefreshToken;
-}
-
-export interface AuthResponse {
-  user: User;
-  tokens: AuthTokens;
-}
+export type TAuthTokens = {
+  access: {
+    token: string;
+    expires: string;
+  };
+  refresh: {
+    token: string;
+    expires: string;
+  };
+};

@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface ActionButtonsProps {
   isPending: boolean;
   closeModal: () => void;
   buttonText: string;
-  modalType: "create" | "edit" | "view";
+  modalType: 'create' | 'edit' | 'view';
 }
 
 const ActionButtons = ({
@@ -14,20 +14,20 @@ const ActionButtons = ({
   modalType,
 }: ActionButtonsProps) => {
   const getButtonContent = () => {
-    if (modalType === "view") return "Close";
+    if (modalType === 'view') return 'Close';
 
-    return isPending ? "Saving..." : buttonText;
+    return isPending ? 'Saving...' : buttonText;
   };
 
   return (
-    <div className="pt-4 w-full flex justify-end gap-5">
-      {modalType !== "view" && (
-        <Button onClick={closeModal} variant="outline">
+    <div className='pt-4 w-full flex justify-end gap-5'>
+      {modalType !== 'view' && (
+        <Button onClick={closeModal} variant='outline'>
           Cancel
         </Button>
       )}
 
-      <Button disabled={isPending} type="submit">
+      <Button disabled={isPending} type='submit'>
         {getButtonContent()}
       </Button>
     </div>

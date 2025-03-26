@@ -10,13 +10,13 @@ import {
 import { AuthApi } from '../api';
 import { setupAxiosInterceptors } from '../services/axios-interceptor';
 import TokenService from '../services/token-service';
-import type { AuthTokens, User } from '../types';
+import { TAuthTokens, TUser } from '../types';
 
 type AuthContextType = {
-  user: User | null;
+  user: TUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (data: { user: User; tokens: AuthTokens }) => void;
+  login: (data: { user: TUser; tokens: TAuthTokens }) => void;
   logout: () => void;
 };
 
@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType>(null!);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
   const [state, setState] = useState<{
-    user: User | null;
+    user: TUser | null;
     isLoading: boolean;
   }>({
     user: null,
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = useCallback(
-    ({ user, tokens }: { user: User; tokens: AuthTokens }) => {
+    ({ user, tokens }: { user: TUser; tokens: TAuthTokens }) => {
       TokenService.setTokens(tokens.access.token, tokens.refresh.token);
       setState({ user, isLoading: false });
     },

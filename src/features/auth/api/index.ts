@@ -1,9 +1,13 @@
 import apiClient from '@/lib/api/client';
-import type { AuthResponse, AuthTokens, User } from '../types';
+import { TAuthResponse, TUser } from '../types';
+import { TApiResponse } from './../../../types/api';
 
 export const AuthApi = {
   login: async (payload: { email: string; password: string }) => {
-    const response = await apiClient.post<AuthResponse>('/auth/login', payload);
+    const response = await apiClient.post<TApiResponse<TAuthResponse>>(
+      '/auth/login',
+      payload,
+    );
     return response.data;
   },
   register: async (payload: {
@@ -11,18 +15,18 @@ export const AuthApi = {
     email: string;
     password: string;
   }) => {
-    const response = await apiClient.post<AuthResponse>(
+    const response = await apiClient.post<TApiResponse<TAuthResponse>>(
       '/auth/register',
       payload,
     );
     return response.data;
   },
   refreshToken: (token: string) => {
-    return apiClient.post<AuthTokens>('/auth/refresh-tokens', {
+    return apiClient.post<TApiResponse<TAuthResponse>>('/auth/refresh-tokens', {
       refreshToken: token,
     });
   },
-  getMe: () => apiClient.get<User>('/auth/me'),
+  getMe: () => apiClient.get<TUser>('/auth/me'),
   logout: () => apiClient.post('/auth/logout'),
   forgotPassword: (email: string) => {
     return apiClient.post('/auth/forgot-password', { email });

@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,23 +17,28 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import * as React from "react";
-import { ScrollArea, ScrollBar } from "../scroll-area";
-import { ColumnManager } from "./data-table-column-manager";
+} from '@tanstack/react-table';
+import * as React from 'react';
+import { ScrollArea, ScrollBar } from '../scroll-area';
+import { ColumnManager } from './data-table-column-manager';
+import { DataTableSkeleton } from './data-table-skeleton';
 
 interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData>[];
+  isLoading?: boolean;
+  skeletonRowCount?: number;
 }
 
 const DataTable = <TData extends object>({
   data,
   columns,
+  isLoading = false,
+  skeletonRowCount = 5,
 }: DataTableProps<TData>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -58,28 +63,37 @@ const DataTable = <TData extends object>({
     },
   });
 
+  if (isLoading) {
+    return (
+      <div className='rounded-md border'>
+        <DataTableSkeleton
+          rowCount={skeletonRowCount}
+          columnCount={columns.length}
+        />
+      </div>
+    );
+  }
+
   return (
-    <ScrollArea className="grid rounded-md border">
+    <ScrollArea className='grid rounded-md border'>
       <ColumnManager table={table} />
-      <Table className="relative min-w-[640px] overflow-x-auto">
+      <Table className='relative min-w-[640px] overflow-x-auto'>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    className="px-3 whitespace-nowrap capitalize"
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  className='px-3 whitespace-nowrap capitalize'
+                  key={header.id}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
@@ -88,10 +102,10 @@ const DataTable = <TData extends object>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                data-state={row.getIsSelected() && 'selected'}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="px-3" key={cell.id}>
+                  <TableCell className='px-3' key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -99,14 +113,14 @@ const DataTable = <TData extends object>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className='h-24 text-center'>
                 No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <ScrollBar orientation="horizontal" />
+      <ScrollBar orientation='horizontal' />
     </ScrollArea>
   );
 };

@@ -8,7 +8,6 @@ export type FormControlValue<T extends FieldValues = any> = {
 
 export const FormControl = createContext<FormControlValue | null>(null);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useFormControl = <T extends FieldValues>() => {
   const context = useContext(FormControl);
 
