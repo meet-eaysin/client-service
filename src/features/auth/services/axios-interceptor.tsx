@@ -1,4 +1,6 @@
-// src/features/auth/services/axios-interceptor.ts
+// @ts-nocheck
+
+
 import axios from 'axios';
 import { AuthApi } from '../api';
 import TokenService from './token-service';

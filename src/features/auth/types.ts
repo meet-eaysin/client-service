@@ -1,4 +1,4 @@
-import { TRole } from '../role/types';
+import {TRole} from "../../features/role/role.type"
 
 export type TUser = {
   id: string;

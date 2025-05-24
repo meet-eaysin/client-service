@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "./theme-toggle/theme-provider";
 
 export function ModeToggle() {

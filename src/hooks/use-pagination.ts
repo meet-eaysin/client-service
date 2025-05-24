@@ -1,4 +1,4 @@
-import defaultConfig from "@/config/default";
+import defaultConfig from "../config";
 import { useState } from "react";
 
 const usePagination = ({

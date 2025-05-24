@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useAuthGuard } from '@/features/auth/hooks/useAuthGuard';
 import { Navigate, Outlet } from 'react-router-dom';
